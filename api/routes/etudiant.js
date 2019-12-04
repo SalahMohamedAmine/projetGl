@@ -13,7 +13,7 @@ const etudiantController = require('../controller/etudiantController');
 
 
 //router.get('/createTable',etudiantController.etudiant_create_table);
-router.get('/',checkAuth,etudiantController.etudiants_get_all);
+router.get('/',/*checkAuth,*/etudiantController.etudiants_get_all);
 router.get('/:id',etudiantController.etudiants_get_byid);
 router.patch('/:id',etudiantController.etudiant_update_byid);
 router.post('/',etudiantController.etudiant_add);

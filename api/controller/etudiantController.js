@@ -20,18 +20,9 @@ db.connect((err) => {
     console.log('Mysql Connected');
 })
 
-exports.etudiant_create_table = (req,res) => {
-    let sql = "CREATE TABLE etudiant(cin varchar(8) , nom VARCHAR(25),prenom VARCHAR(25), adresse VARCHAR(255), email VARCHAR(25),telephone VARCHAR(16),PRIMARY KEY (cin))";
-    db.query(sql , (err,result) => {
-        if (err){
-            console.log(err);
-        }
-        console.log(result);
-        res.send('table posts cretaed')
-    })
-}
 
 
+//get all etudiant
 exports.etudiants_get_all = (req,res) => {
    
     let sql ='SELECT * FROM etudiant';
@@ -48,7 +39,7 @@ exports.etudiants_get_all = (req,res) => {
     })
 }
 
-
+//add new etrudiant
 exports.etudiant_add = (req,res) => {
     
 
@@ -58,9 +49,10 @@ exports.etudiant_add = (req,res) => {
     const adresse=req.body.adresse;
     const email=req.body.email;
     const telephone=req.body.telephone;
+    const id_filiere=req.body.id_filiere;
 
 
-    let etudiant = {cin:cin ,nom:nom ,prenom:prenom ,adresse:adresse ,email:email ,telephone:telephone };
+    let etudiant = {cin_etudiant:cin ,nom_etudiant:nom ,prenom_etudiant:prenom ,adresse_etudiant:adresse ,email_etudiant:email ,telephone_etudiant:telephone,id_filiere:id_filiere };
     let sql ='INSERT INTO etudiant set ?';
     let query = db.query(sql,etudiant,(err,result) => {
         if (err){
@@ -76,9 +68,11 @@ exports.etudiant_add = (req,res) => {
 }
 
 
+//select a etudiant by cin
 exports.etudiants_get_byid = (req,res) => {
-   
-    let sql =`SELECT * FROM etudiant WHERE cin = ${req.params.id}`;
+    
+    //check if etudiant  exist or not
+    let sql =`SELECT * FROM etudiant WHERE cin_etudiant = ${req.params.id}`;
     let query = db.query(sql,(err,result) => {
         if (err){
             return res.status(404).json({
@@ -86,11 +80,12 @@ exports.etudiants_get_byid = (req,res) => {
             })
         }
         if(result.length ==0){
+            //if etudiant dosen't exist return bad request
            return res.status(400).json({
                 message : "etudiant not found"
             })
         }
-
+            //if etudiant exist return 200 status and return result
             console.log(result);
             res.status(200).json({
                 result
@@ -100,31 +95,34 @@ exports.etudiants_get_byid = (req,res) => {
     })
 }
 
+//update etudiant 
 exports.etudiant_update_byid = (req,res) => {
     const id =req.params.id;
     
-    
-    let sql =`SELECT * FROM etudiant WHERE cin = ${req.params.id}`;
+        //check if etudiant  exist or not
+    let sql =`SELECT * FROM etudiant WHERE cin_etudiant = ${req.params.id}`;
     let query = db.query(sql,(err,result) => {
         if (err){
             return res.status(404).json({
                 error: err
             })
-        }
+        } //if etudiant dosen't exist return bad request
         if(result.length ==0){
            return res.status(400).json({
                 message : "etudiant not found"
             })
-        }         
+        }      
+         //if etudiant exist get parametres from body    
     const nom=req.body.nom;
     const prenom=req.body.prenom;
     const adresse=req.body.adresse;
     const email=req.body.email;
     const telephone=req.body.telephone;
+    const id_filiere=req.body.id_filiere;
 
 
 
-    let sql =`UPDATE etudiant set nom='${nom}',prenom='${prenom}',adresse='${adresse}',email='${email}',telephone='${telephone}' WHERE  cin = ${req.params.id}`;
+    let sql =`UPDATE etudiant set nom_etudiant='${nom}',prenom_etudiant='${prenom}',adresse_etudiant='${adresse}',email_etudiant='${email}',telephone_etudiant='${telephone}',id_filiere='${id_filiere}' WHERE  cin_etudiant = ${req.params.id}`;
     let query = db.query(sql,(err,result) => {
         if (err){
             return res.status(404).json({
@@ -140,17 +138,17 @@ exports.etudiant_update_byid = (req,res) => {
     })
 }
 
-
+//delete etudiant
 exports.etudiant_delete_byid =(req,res) => {
 
 
-    let sql =`SELECT * FROM etudiant WHERE cin = ${req.params.id}`;
+    let sql =`SELECT * FROM etudiant WHERE cin_etudiant = ${req.params.id}`;
     let query = db.query(sql,(err,result) => {
         if (err){
             return res.status(404).json({
                 error: err
             })
-        }
+        }//if etudiant dosen't exist return bad request
         if(result.length ==0){
            return res.status(400).json({
                 message : "etudiant not found"
@@ -172,15 +170,17 @@ exports.etudiant_delete_byid =(req,res) => {
 })
 }
 
+//etudiant login 
 exports.etudiant_login = (req,res,next)=>{
+    //check if etudiant is exist or not
     const id =req.body.cin;
-    let sql =`SELECT * FROM etudiant WHERE cin = ${req.body.cin}`;
+    let sql =`SELECT * FROM etudiant WHERE cin_etudiant = ${req.body.cin}`;
     let query = db.query(sql,(err,result) => {
         if (err){
             return res.status(404).json({
                 error: err
             })
-        }
+        }// test empty array  // if empty array etudiant not exist
         if(result.length ==0){
            return res.status(400).json({
                 message : "Auth failed"
@@ -192,18 +192,19 @@ exports.etudiant_login = (req,res,next)=>{
         //const email=req.body.email;
         //const telephone=req.body.telephone;
 
+
+        // create token with 2 parameter (email and cin)
+        //expire token in 1 hour
         const token= jwt.sign({
-            email: result[0].email,
-            userId:result[0].cin
+            email: result[0].email_etudiant,
+            userId:result[0].cin_etudiant
         },'secret',{
             expiresIn:'1h'
         })
         return res.status(200).json({
             message : 'Auth successful',
             token: token
-
         })
-        
     })
 }
 

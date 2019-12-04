@@ -45,7 +45,7 @@ exports.filiere_add = (req,res) => {
     const intitule=req.body.intitule;
     const id_dept=req.body.id_dept;
 
-    let filiere = {id_filiere:id ,intitule:intitule ,id_dept:id_dept };
+    let filiere = {id_filiere:id ,intitule_filiere:intitule ,id_department:id_dept };
     let sql ='INSERT INTO filiere set ?';
     let query = db.query(sql,filiere,(err,result) => {
         if (err){
@@ -104,7 +104,7 @@ exports.filiere_update_byid = (req,res) => {
     const intitule=req.body.intitule;
     const id_dept=req.body.id_dept;
 
-    let sql =`UPDATE filiere set intitule='${intitule}',id_dept='${id_dept}' WHERE  id_filiere = ${req.params.id}`;
+    let sql =`UPDATE filiere set intitule_filiere='${intitule}',id_department='${id_dept}' WHERE  id_filiere = ${req.params.id}`;
     let query = db.query(sql,(err,result) => {
         if (err){
             return res.status(404).json({

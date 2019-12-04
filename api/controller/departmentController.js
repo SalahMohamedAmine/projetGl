@@ -42,12 +42,12 @@ exports.departments_get_all = (req,res) => {
 exports.department_add = (req,res) => {
     
 
-    const id=req.body.id_dept;
-    const intitule=req.body.intitule;
+    const id=req.body.id_department;
+    const intitule=req.body.intitule_department;
     
 
 
-    let department = {id_dept:id ,intitule:intitule};
+    let department = {id_department:id ,intitule_department:intitule};
     let sql ='INSERT INTO department set ?';
     let query = db.query(sql,department,(err,result) => {
         if (err){
@@ -65,7 +65,7 @@ exports.department_add = (req,res) => {
 
 exports.departments_get_byid = (req,res) => {
    
-    let sql =`SELECT * FROM department WHERE id_dept = ${req.params.id}`;
+    let sql =`SELECT * FROM department WHERE id_department = ${req.params.id}`;
     let query = db.query(sql,(err,result) => {
         if (err){
             return res.status(404).json({
@@ -91,7 +91,7 @@ exports.department_update_byid = (req,res) => {
     const id =req.params.id;
     
     
-    let sql =`SELECT * FROM department WHERE id_dept = ${req.params.id}`;
+    let sql =`SELECT * FROM department WHERE id_department = ${req.params.id}`;
     let query = db.query(sql,(err,result) => {
         if (err){
             return res.status(404).json({
@@ -108,7 +108,7 @@ exports.department_update_byid = (req,res) => {
 
 
 
-    let sql =`UPDATE department set id_dept='${id}',intitule='${intitule}' WHERE  id_dept = ${req.params.id}`;
+    let sql =`UPDATE department set id_department='${id}',intitule_department='${intitule}' WHERE  id_department = ${req.params.id}`;
     let query = db.query(sql,(err,result) => {
         if (err){
             return res.status(404).json({
@@ -128,7 +128,7 @@ exports.department_update_byid = (req,res) => {
 exports.department_delete_byid =(req,res) => {
 
 
-    let sql =`SELECT * FROM department WHERE id_dept = ${req.params.id}`;
+    let sql =`SELECT * FROM department WHERE id_department = ${req.params.id}`;
     let query = db.query(sql,(err,result) => {
         if (err){
             return res.status(404).json({
@@ -140,7 +140,7 @@ exports.department_delete_byid =(req,res) => {
                 message : "department not found"
             })
         }      
-    let sql =`DELETE FROM department  WHERE  id_dept = ${req.params.id}`;
+    let sql =`DELETE FROM department  WHERE  id_department = ${req.params.id}`;
     let query = db.query(sql,(err,result) => {
         if (err){
             return res.status(404).json({
