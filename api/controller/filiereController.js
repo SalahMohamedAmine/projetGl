@@ -23,7 +23,7 @@ db.connect((err) => {
 
 exports.filieres_get_all = (req,res) => {
    
-    let sql ='SELECT * FROM filiere';
+    let sql ='SELECT * FROM filiere ,department WHERE filiere.id_department = department.id_department';
     let query = db.query(sql,(err,result) => {
         if (err){
             return res.status(404).json({
@@ -31,8 +31,22 @@ exports.filieres_get_all = (req,res) => {
             })
         }
         console.log(result);
+
+        let arrayResult=[];
+        result.map((value,i) =>{
+            arrayResult[i]={
+                    "id_filiere":value.id_filiere,
+                    "intitule_filiere":value.intitule_filiere,
+                    "departement":{
+                        "id_department":value.id_department,
+                        "intitule_department":value.intitule_department,
+                        
+                    }
+            }
+        })
+
         res.status(200).json({
-            result
+            arrayResult
         })
     })
 }
@@ -63,7 +77,7 @@ exports.filiere_add = (req,res) => {
 
 exports.filieres_get_byid = (req,res) => {
    
-    let sql =`SELECT * FROM filiere WHERE id_filiere = ${req.params.id}`;
+    let sql =`SELECT * FROM filiere ,department WHERE id_filiere = ${req.params.id} and filiere.id_department = department.id_department `;
     let query = db.query(sql,(err,result) => {
         if (err){
             return res.status(404).json({
@@ -77,10 +91,21 @@ exports.filieres_get_byid = (req,res) => {
         }
 
             console.log(result);
-            res.status(200).json({
-                result
-            })
+            let arrayResult=[];
+            result.map((value,i) =>{
+            arrayResult[i]={
+                    "id_filiere":value.id_filiere,
+                    "intitule_filiere":value.intitule_filiere,
+                    "departement":{
+                        "id_department":value.id_department,
+                        "intitule_department":value.intitule_department,
+                        }
+            }
+        })
 
+        res.status(200).json({
+            arrayResult
+        })
         
     })
 }

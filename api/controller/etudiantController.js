@@ -25,7 +25,7 @@ db.connect((err) => {
 //get all etudiant
 exports.etudiants_get_all = (req,res) => {
    
-    let sql ='SELECT * FROM etudiant';
+    let sql ='SELECT * FROM etudiant ,filiere where etudiant.id_filiere=filiere.id_filiere';
     let query = db.query(sql,(err,result) => {
         if (err){
             return res.status(404).json({
@@ -33,8 +33,29 @@ exports.etudiants_get_all = (req,res) => {
             })
         }
         console.log(result);
+        let arrayResult=[];
+
+        result.map((value,i) =>{
+            arrayResult[i]={
+                "etudiant":{
+                    "cin_etudiant":value.cin_etudiant,
+                    "nom_etudiant":value.nom_etudiant,
+                    "prenom_etudiant": value.prenom_etudiant,
+                    "adresse_etudiant": value.adresse_etudiant,
+                    "email_etudiant" :value.email_etudiant,
+                    "telephone_etudiant":value.telephone_etudiant,
+                },
+                "Filiere":{
+                    "id_filiere":value.id_filiere,
+                    "intitule_filiere":value.intitule_filiere,
+                    "id_department":value.id_department,
+                }
+            }
+            
+        })
+
         res.status(200).json({
-            result
+            arrayResult
         })
     })
 }
@@ -72,7 +93,7 @@ exports.etudiant_add = (req,res) => {
 exports.etudiants_get_byid = (req,res) => {
     
     //check if etudiant  exist or not
-    let sql =`SELECT * FROM etudiant WHERE cin_etudiant = ${req.params.id}`;
+    let sql =`SELECT * FROM etudiant,filiere  WHERE cin_etudiant = ${req.params.id} and  etudiant.id_filiere=filiere.id_filiere`;
     let query = db.query(sql,(err,result) => {
         if (err){
             return res.status(404).json({
@@ -87,8 +108,28 @@ exports.etudiants_get_byid = (req,res) => {
         }
             //if etudiant exist return 200 status and return result
             console.log(result);
+            let arrayResult=[];
+            result.map((value,i) =>{
+                arrayResult[i]={
+                    "etudiant":{
+                        "cin_etudiant":value.cin_etudiant,
+                        "nom_etudiant":value.nom_etudiant,
+                        "prenom_etudiant": value.prenom_etudiant,
+                        "adresse_etudiant": value.adresse_etudiant,
+                        "email_etudiant" :value.email_etudiant,
+                        "telephone_etudiant":value.telephone_etudiant,
+                    },
+                    "Filiere":{
+                        "id_filiere":value.id_filiere,
+                        "intitule_filiere":value.intitule_filiere,
+                        "id_department":value.id_department,
+                    }
+                }
+                
+            })
+    
             res.status(200).json({
-                result
+                arrayResult
             })
 
         
@@ -167,8 +208,50 @@ exports.etudiant_delete_byid =(req,res) => {
         })
     })
 
-})
+})//end query
 }
+
+
+exports.getAllEnseignantByEtudiant=(req,res,next) =>{
+
+    let sql =`SELECT nom_enseignant,prenom_enseignant,intitule_matiere,intitule_filiere FROM etudiant ,matiere, filiere , enseignant WHERE 
+    etudiant.id_filiere=filiere.id_filiere and 
+    filiere.id_filiere = matiere.id_filiere  and 
+    matiere.id_enseignant=enseignant.cin_enseignant`;
+    let query = db.query(sql,(err,result) => {
+        if (err){
+            return res.status(404).json({
+                error: err
+            })
+        }
+        //console.log(result);
+        res.status(200).json({
+            result
+        })
+    })
+}
+
+
+
+exports.getAllMatiereByEtudiant=(req,res,next) =>{
+
+    let sql =`SELECT * FROM etudiant ,matiere, filiere WHERE 
+    etudiant.id_filiere=filiere.id_filiere and 
+    filiere.id_filiere = matiere.id_filiere `;
+    let query = db.query(sql,(err,result) => {
+        if (err){
+            return res.status(404).json({
+                error: err
+            })
+        }
+        //console.log(result);
+        res.status(200).json({
+            result
+        })
+    })
+}
+
+
 
 //etudiant login 
 exports.etudiant_login = (req,res,next)=>{

@@ -28,13 +28,8 @@ exports.matieres_get_all = (req,res) => {
             })
         }
         let arrayResult=[];
-        //console.log(result[0].id_matiere);
-        /*res.status(200).json({
-            result
-        })*/
+        
                  result.map((value,i) =>{
-                    
-                        
                     arrayResult[i]={
                         "id_matiere":value.id_matiere,
                         "intitule_matiere":value.intitule_matiere,
@@ -91,7 +86,7 @@ exports.matiere_add = (req,res) => {
 
 exports.matieres_get_byid = (req,res) => {
    
-    let sql =`SELECT * FROM matiere WHERE id_matiere = ${req.params.id}`;
+    let sql =`SELECT * FROM matiere, filiere,enseignant WHERE id_matiere = ${req.params.id} and matiere.id_filiere =filiere.id_filiere  and matiere.id_enseignant =enseignant.cin_enseignant`;
     let query = db.query(sql,(err,result) => {
         if (err){
             return res.status(404).json({
@@ -104,10 +99,35 @@ exports.matieres_get_byid = (req,res) => {
             })
         }
 
-            console.log(result);
-            res.status(200).json({
-                result
-            })
+        let arrayResult=[];
+        
+        result.map((value,i) =>{
+           arrayResult[i]={
+               "id_matiere":value.id_matiere,
+               "intitule_matiere":value.intitule_matiere,
+               "filiere":{
+                   "id_filiere":value.id_filiere,
+                   "intitule_filiere":value.intitule_filiere,
+                   "departement":{
+                       "id_dept":value.id_department,
+                       
+                   }
+               },
+               "enseignant":{
+                   "id_enseignant":value.cin_enseignant,
+                   "nom_enseignant":value.nom_enseignant,
+                   "prenom_enseignant": value.prenom_enseignant,
+                   "adresse_enseignant": value.adresse_enseignant,
+                   "email_enseignant" :value.email_enseignant,
+                   "telephone_enseignant":value.telephone_enseignant,
+               }
+           }
+           
+       })
+
+       return res.status(200).json({
+           arrayResult
+       })
 
         
     })
@@ -182,3 +202,4 @@ exports.matiere_delete_byid =(req,res) => {
 
 })
 }
+
