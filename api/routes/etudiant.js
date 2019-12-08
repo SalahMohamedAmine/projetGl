@@ -12,7 +12,7 @@ const etudiantController = require('../controller/etudiantController');
 //router.delete("/:userId",userController.users_delete)
 
 router.get('/allEnseignant',etudiantController.getAllEnseignantByEtudiant);
-router.get('/allMatiere',etudiantController.getAllMatiereByEtudiant);
+router.get('/:idEtudiant/allMatiere',etudiantController.getAllMatiereByEtudiant);
 
 
 //router.get('/createTable',etudiantController.etudiant_create_table);

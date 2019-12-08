@@ -235,7 +235,11 @@ exports.getAllEnseignantByEtudiant=(req,res,next) =>{
 
 exports.getAllMatiereByEtudiant=(req,res,next) =>{
 
+
+    let idEtudiant=req.params.idEtudiant;
+
     let sql =`SELECT * FROM etudiant ,matiere, filiere WHERE 
+    cin_etudiant=${idEtudiant} and
     etudiant.id_filiere=filiere.id_filiere and 
     filiere.id_filiere = matiere.id_filiere `;
     let query = db.query(sql,(err,result) => {
@@ -244,10 +248,36 @@ exports.getAllMatiereByEtudiant=(req,res,next) =>{
                 error: err
             })
         }
-        //console.log(result);
-        res.status(200).json({
-            result
-        })
+
+        let arrayResult=[];
+            result.map((value,i) =>{
+                arrayResult[i]={
+                    "etudiant":{
+                        "cin_etudiant":value.cin_etudiant,
+                        "nom_etudiant":value.nom_etudiant,
+                        "prenom_etudiant": value.prenom_etudiant,
+                        "adresse_etudiant": value.adresse_etudiant,
+                        "email_etudiant" :value.email_etudiant,
+                        "telephone_etudiant":value.telephone_etudiant,
+                    },
+                    "Filiere":{
+                        "id_filiere":value.id_filiere,
+                        "intitule_filiere":value.intitule_filiere,
+                        "id_department":value.id_department,
+                    },
+                    "Matiere":{
+                        "id_matiere":value.id_matiere,
+                        "intitule_matiere":value.intitule_matiere,
+                        "id_enseignant":value.id_enseignant
+                    }
+                }
+                
+            })
+    
+            res.status(200).json({
+                arrayResult
+            })
+
     })
 }
 
