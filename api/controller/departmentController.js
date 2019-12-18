@@ -9,13 +9,14 @@ const db=mysql.createConnection({
     host : 'localhost',
     user : 'root',
     password : '',
-    database :'projetnodejs'
+    database :'projetnodejs',
+
 });
 
 
 db.connect((err) => {
     if(err){
-        throw err;
+        console.log("error",err);
     }
     console.log('Mysql Connected');
 })

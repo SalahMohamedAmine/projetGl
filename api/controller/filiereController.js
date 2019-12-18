@@ -2,19 +2,25 @@ const bcrypt=require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mysql =require('mysql');
 
+/*    host : 'localhost',
+    user : 'id11888269_root',
+    password : 'polytech',
+    database :'id11888269_projetgl',
+    port: 3307
+*/
 
 //create connection
 const db=mysql.createConnection({
     host : 'localhost',
     user : 'root',
     password : '',
-    database :'projetnodejs'
+    database :'projetnodejs',
 });
 
 
 db.connect((err) => {
     if(err){
-        throw err;
+        console.log("error",err);
     }
     console.log('Mysql Connected');
 })

@@ -7,8 +7,8 @@ const etudiantRoutes = require('./api/routes/etudiant');
 const departmentRoutes = require('./api/routes/department');
 const filiereRoutes = require('./api/routes/filiere');
 const matiereRoutes = require('./api/routes/matiere');
-
 const enseignantRoutes = require('./api/routes/enseignant');
+const evalueRoutes = require('./api/routes/evalue');
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
@@ -27,6 +27,7 @@ app.use("/department",departmentRoutes);
 app.use("/filiere",filiereRoutes);
 app.use("/matiere",matiereRoutes);
 app.use("/enseignant",enseignantRoutes);
+app.use("/evalue",evalueRoutes);
 
 
 

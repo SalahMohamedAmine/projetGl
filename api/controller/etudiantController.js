@@ -3,23 +3,26 @@ const bcrypt=require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mysql =require('mysql');
 
+//wb5D@!KEebW6h@U
+//salahmohamedamine93@gmail.com
 
-//create connection
 const db=mysql.createConnection({
+    
     host : 'localhost',
     user : 'root',
     password : '',
-    database :'projetnodejs'
+    database :'projetnodejs',
+
 });
 
+//var connection = mysql.createConnection('mysql://id11888269_root:polytech@localhost/id11888269_projetgl?debug=true&charset=BIG5_CHINESE_CI&timezone=-0700');
 
 db.connect((err) => {
     if(err){
-        throw err;
+        console.log("error",err);
     }
     console.log('Mysql Connected');
 })
-
 
 
 //get all etudiant
@@ -37,19 +40,21 @@ exports.etudiants_get_all = (req,res) => {
 
         result.map((value,i) =>{
             arrayResult[i]={
-                "etudiant":{
+                "etudiant":[
+                {
                     "cin_etudiant":value.cin_etudiant,
                     "nom_etudiant":value.nom_etudiant,
                     "prenom_etudiant": value.prenom_etudiant,
                     "adresse_etudiant": value.adresse_etudiant,
                     "email_etudiant" :value.email_etudiant,
                     "telephone_etudiant":value.telephone_etudiant,
-                },
-                "Filiere":{
+                }],
+                "Filiere":[
+                {
                     "id_filiere":value.id_filiere,
                     "intitule_filiere":value.intitule_filiere,
                     "id_department":value.id_department,
-                }
+                }]
             }
             
         })
@@ -111,19 +116,21 @@ exports.etudiants_get_byid = (req,res) => {
             let arrayResult=[];
             result.map((value,i) =>{
                 arrayResult[i]={
-                    "etudiant":{
+                    "etudiant":[
+                    {
                         "cin_etudiant":value.cin_etudiant,
                         "nom_etudiant":value.nom_etudiant,
                         "prenom_etudiant": value.prenom_etudiant,
                         "adresse_etudiant": value.adresse_etudiant,
                         "email_etudiant" :value.email_etudiant,
                         "telephone_etudiant":value.telephone_etudiant,
-                    },
-                    "Filiere":{
+                    }],
+                    "Filiere":[
+                    {
                         "id_filiere":value.id_filiere,
                         "intitule_filiere":value.intitule_filiere,
                         "id_department":value.id_department,
-                    }
+                    }]
                 }
                 
             })

@@ -7,13 +7,14 @@ const db=mysql.createConnection({
     host : 'localhost',
     user : 'root',
     password : '',
-    database :'projetnodejs'
+    database :'projetnodejs',
+
 });
 
 
 db.connect((err) => {
     if(err){
-        throw err;
+        console.log("error",err);
     }
     console.log('Mysql Connected');
 })
@@ -33,22 +34,25 @@ exports.matieres_get_all = (req,res) => {
                     arrayResult[i]={
                         "id_matiere":value.id_matiere,
                         "intitule_matiere":value.intitule_matiere,
-                        "filiere":{
+                        "filiere":[
+                        {
                             "id_filiere":value.id_filiere,
                             "intitule_filiere":value.intitule_filiere,
-                            "departement":{
+                            "departement":[
+                            {
                                 "id_dept":value.id_department,
                                 
-                            }
-                        },
-                        "enseignant":{
+                            }]
+                        }],
+                        "enseignant":[
+                        {
                             "id_enseignant":value.cin_enseignant,
                             "nom_enseignant":value.nom_enseignant,
                             "prenom_enseignant": value.prenom_enseignant,
                             "adresse_enseignant": value.adresse_enseignant,
                             "email_enseignant" :value.email_enseignant,
                             "telephone_enseignant":value.telephone_enseignant,
-                        }
+                        }]
                     }
                     
                 })
@@ -102,28 +106,31 @@ exports.matieres_get_byid = (req,res) => {
         let arrayResult=[];
         
         result.map((value,i) =>{
-           arrayResult[i]={
-               "id_matiere":value.id_matiere,
-               "intitule_matiere":value.intitule_matiere,
-               "filiere":{
-                   "id_filiere":value.id_filiere,
-                   "intitule_filiere":value.intitule_filiere,
-                   "departement":{
-                       "id_dept":value.id_department,
-                       
-                   }
-               },
-               "enseignant":{
-                   "id_enseignant":value.cin_enseignant,
-                   "nom_enseignant":value.nom_enseignant,
-                   "prenom_enseignant": value.prenom_enseignant,
-                   "adresse_enseignant": value.adresse_enseignant,
-                   "email_enseignant" :value.email_enseignant,
-                   "telephone_enseignant":value.telephone_enseignant,
-               }
-           }
-           
-       })
+            arrayResult[i]={
+                "id_matiere":value.id_matiere,
+                "intitule_matiere":value.intitule_matiere,
+                "filiere":[
+                {
+                    "id_filiere":value.id_filiere,
+                    "intitule_filiere":value.intitule_filiere,
+                    "departement":[
+                    {
+                        "id_dept":value.id_department,
+                        
+                    }]
+                }],
+                "enseignant":[
+                {
+                    "id_enseignant":value.cin_enseignant,
+                    "nom_enseignant":value.nom_enseignant,
+                    "prenom_enseignant": value.prenom_enseignant,
+                    "adresse_enseignant": value.adresse_enseignant,
+                    "email_enseignant" :value.email_enseignant,
+                    "telephone_enseignant":value.telephone_enseignant,
+                }]
+            }
+            
+        })
 
        return res.status(200).json({
            arrayResult
