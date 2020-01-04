@@ -240,7 +240,7 @@ exports.getAllEnseignantByEtudiant=(req,res,next) =>{
 
 
 
-exports.getAllMatiereByEtudiant=(req,res,next) =>{
+/*exports.getAllMatiereByEtudiant=(req,res,next) =>{
 
 
     let idEtudiant=req.params.idEtudiant;
@@ -286,7 +286,7 @@ exports.getAllMatiereByEtudiant=(req,res,next) =>{
             })
 
     })
-}
+}*/
 
 
 
@@ -322,9 +322,70 @@ exports.etudiant_login = (req,res,next)=>{
             expiresIn:'1h'
         })
         return res.status(200).json({
-            message : 'Auth successful',
-            token: token
+            arrayResult:[{
+                "message" : 'Auth successful',
+                "token" : token
+            }]
         })
     })
 }
+
+
+
+exports.getAllMatiereByEtudiant=(req,res,next) =>{
+
+
+    let idEtudiant=req.params.idEtudiant;
+
+    let sql =`SELECT * FROM etudiant ,matiere, filiere,enseignant WHERE 
+    cin_etudiant=${idEtudiant} and
+    etudiant.id_filiere=filiere.id_filiere and 
+    filiere.id_filiere = matiere.id_filiere and
+    matiere.id_enseignant = enseignant.cin_enseignant `;
+    let query = db.query(sql,(err,result) => {
+        if (err){
+            return res.status(404).json({
+                error: err
+            })
+        }
+
+        let arrayResult=[];
+            result.map((value,i) =>{
+                arrayResult[i]={
+                    "id_matiere":value.id_matiere,
+                    "intitule_matiere":value.intitule_matiere,
+                    "filiere":[{
+                        "id_filiere":value.id_filiere,
+                        "intitule_filiere":value.intitule_filiere,
+                        "departement": [{ "id_dept":value.id_department}],
+                    }],
+                    "enseignant":[{
+                        "id_enseignant":value.cin_etudiant,
+                        "nom_enseignant":value.nom_etudiant,
+                        "prenom_enseignant": value.prenom_etudiant,
+                        "adresse_enseignant": value.adresse_etudiant,
+                        "email_enseignant" :value.email_etudiant,
+                        "telephone_enseignant":value.telephone_etudiant,
+                    }],
+                    "etudiant":[{
+                        "cin_etudiant":value.cin_etudiant,
+                        "nom_etudiant":value.nom_etudiant,
+                        "prenom_etudiant": value.prenom_etudiant,
+                        "adresse_etudiant": value.adresse_etudiant,
+                        "email_etudiant" :value.email_etudiant,
+                        "telephone_etudiant":value.telephone_etudiant,
+                    }]
+                }
+                
+            })
+    
+            res.status(200).json({
+                arrayResult
+            })
+
+    })
+}
+
+
+
 
